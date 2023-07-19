@@ -8,6 +8,8 @@
 #if defined(__linux__)
 
 #include "knot/deviceinfo.h"
+#include <unordered_map>
+#include <algorithm>
 #include <fstream>
 
 void KNDeviceInfoFetch(KNDeviceInfo &info) {
@@ -21,7 +23,7 @@ void KNDeviceInfoFetch(KNDeviceInfo &info) {
             std::string key = line.substr(0, delimiter_pos);
             std::string value = line.substr(delimiter_pos + 1);
             if (!key.empty() && !value.empty() && value.back() == '\n') {
-                value.pop_back();  // Remove trailing newline
+                value.pop_back();
             }
             value.erase(std::remove(value.begin(), value.end(), '"'), value.end());
             os_info[key] = value;

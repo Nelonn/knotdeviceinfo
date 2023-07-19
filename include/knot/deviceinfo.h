@@ -5,8 +5,8 @@
  * https://github.com/noseam-env/libknotdeviceinfo/blob/master/LEGAL
  */
 
-#ifndef KNOTDEVICEINFO_H
-#define KNOTDEVICEINFO_H
+#ifndef KNOT_DEVICEINFO_H
+#define KNOT_DEVICEINFO_H
 
 #include <optional>
 #include <string>
@@ -21,4 +21,4 @@ struct KNDeviceInfo {
 
 void KNDeviceInfoFetch(KNDeviceInfo &info);
 
-#endif //KNOTDEVICEINFO_H
+#endif //KNOT_DEVICEINFO_H
