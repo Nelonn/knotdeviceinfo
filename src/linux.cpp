@@ -30,6 +30,7 @@ void KNDeviceInfoFetch(KNDeviceInfo &info) {
         }
     }
 
+    infile.close();
     info.platform = os_info["NAME"];
     info.system_version = os_info["VERSION_ID"];
 }
