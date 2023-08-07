@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <fstream>
+#include <unistd.h>
 
 void KNDeviceInfoFetch(KNDeviceInfo &info) {
     std::ifstream infile("/etc/os-release");
@@ -30,7 +31,11 @@ void KNDeviceInfoFetch(KNDeviceInfo &info) {
         }
     }
 
-    infile.close();
+    char hostname[256];
+    if (gethostname(hostname, sizeof(hostname)) == 0) {
+        info.name = std::string(hostname);
+    }
+
     info.platform = os_info["NAME"];
     info.system_version = os_info["VERSION_ID"];
 }
