@@ -2,7 +2,7 @@
 
 Library, that fetch device info. Supports: Linux, macOS, Windows
 
-The source code is published under GPL-3.0, the license is available [here](https://github.com/noseam-env/libknotdeviceinfo/blob/master/LICENSE).
+The source code is published under MIT License, the license is available [here](https://github.com/noseam-env/knotdeviceinfo/blob/master/LICENSE).
 
 ## Example
 
@@ -12,7 +12,7 @@ The source code is published under GPL-3.0, the license is available [here](http
 
 int main() {
     KNDeviceInfo info{};
-    KNDeviceInfoFetch(info);
+    KNDeviceInfoFetch(&info);
     std::cout << info.platform << " " << info.system_version << std::endl;
 }
 ```

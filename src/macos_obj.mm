@@ -1,8 +1,8 @@
 /*
- * This file is part of libknotdeviceinfo.
+ * This file is part of knotdeviceinfo.
  *
  * For license and copyright information please follow this link:
- * https://github.com/noseam-env/libknotdeviceinfo/blob/master/LEGAL
+ * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
 
 #import <Foundation/Foundation.h>

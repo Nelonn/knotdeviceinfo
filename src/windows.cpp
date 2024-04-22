@@ -1,11 +1,13 @@
 /*
- * This file is part of libknotdeviceinfo.
+ * This file is part of knotdeviceinfo.
  *
  * For license and copyright information please follow this link:
- * https://github.com/noseam-env/libknotdeviceinfo/blob/master/LEGAL
+ * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
 
-#if defined(_WIN32)
+#include "os.h"
+
+#if defined(OS_WINDOWS)
 
 #include "knot/deviceinfo.h"
 #include <Windows.h>
@@ -36,7 +38,7 @@ RTL_OSVERSIONINFOW GetRealOSVersion() {
     return rovi;
 }
 
-std::optional<std::string> GetWindowsVersion() {
+char* GetWindowsVersion() {
     auto osvi = GetRealOSVersion();
     if (osvi.dwMajorVersion == 10 && osvi.dwMinorVersion == 0) {
         if (osvi.dwBuildNumber >= 22000 && osvi.dwBuildNumber < 23000) {
@@ -58,21 +60,19 @@ std::optional<std::string> GetWindowsVersion() {
     } else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0) {
         return "2000";
     }
-    return {};
+    return NULL;
 }
 
-std::optional<std::string> GetComputerModel() {
+char* GetComputerModel() {
     std::string computerModel;
 
     HRESULT hres;
 
-    // Инициализация COM библиотеки
     hres = CoInitializeEx(0, COINIT_MULTITHREADED);
     if (FAILED(hres)) {
-        return std::nullopt;
+        return NULL;
     }
 
-    // Инициализация безопасности COM
     hres = CoInitializeSecurity(
             nullptr,
             -1,
@@ -85,10 +85,9 @@ std::optional<std::string> GetComputerModel() {
             nullptr);
     if (FAILED(hres)) {
         CoUninitialize();
-        return std::nullopt;
+        return NULL;
     }
 
-    // Инициализация WMI
     IWbemLocator *pLoc = nullptr;
     hres = CoCreateInstance(
             CLSID_WbemLocator,
@@ -98,10 +97,9 @@ std::optional<std::string> GetComputerModel() {
             reinterpret_cast<LPVOID *>(&pLoc));
     if (FAILED(hres)) {
         CoUninitialize();
-        return std::nullopt;
+        return NULL;
     }
 
-    // Подключение к WMI
     IWbemServices *pSvc = nullptr;
     hres = pLoc->ConnectServer(
             _bstr_t(L"ROOT\\CIMV2"),
@@ -115,10 +113,9 @@ std::optional<std::string> GetComputerModel() {
     if (FAILED(hres)) {
         pLoc->Release();
         CoUninitialize();
-        return std::nullopt;
+        return NULL;
     }
 
-    // Установка безопасности для вызовов WMI
     hres = CoSetProxyBlanket(
             pSvc,
             RPC_C_AUTHN_WINNT,
@@ -132,10 +129,9 @@ std::optional<std::string> GetComputerModel() {
         pSvc->Release();
         pLoc->Release();
         CoUninitialize();
-        return std::nullopt;
+        return NULL;
     }
 
-    // Выполнение запроса WMI для получения модели компьютера
     IEnumWbemClassObject *pEnumerator = nullptr;
     hres = pSvc->ExecQuery(
             bstr_t("WQL"),
@@ -147,15 +143,12 @@ std::optional<std::string> GetComputerModel() {
         IWbemClassObject *pclsObj = nullptr;
         ULONG uReturn = 0;
 
-        // Получение первого объекта
         hres = pEnumerator->Next(WBEM_INFINITE, 1, &pclsObj, &uReturn);
         if (uReturn == 1) {
             VARIANT vtProp;
 
-            // Получение свойства "Model" из объекта
             hres = pclsObj->Get(L"Model", 0, &vtProp, 0, 0);
             if (SUCCEEDED(hres)) {
-                // Конвертация VARIANT в std::string
                 computerModel = _bstr_t(vtProp.bstrVal);
 
                 VariantClear(&vtProp);
@@ -171,15 +164,15 @@ std::optional<std::string> GetComputerModel() {
     CoUninitialize();
 
     if (!computerModel.empty()) {
-        return computerModel;
+        return strdup(computerModel.c_str());
     } else {
-        return std::nullopt;
+        return NULL;
     }
 }
 
-void KNDeviceInfoFetch(KNDeviceInfo &info) {
-    info.platform = "Windows";
-    info.system_version = GetWindowsVersion();
+void KNDeviceInfoFetch(KNDeviceInfo* info) {
+    info->platform = "Windows";
+    info->system_version = GetWindowsVersion();
 
     // uuid
     HKEY hKey;
@@ -188,7 +181,7 @@ void KNDeviceInfoFetch(KNDeviceInfo &info) {
         DWORD uuidSize = sizeof(uuid);
         if (RegQueryValueExA(hKey, "MachineGuid", nullptr, nullptr,
                              reinterpret_cast<LPBYTE>(uuid), &uuidSize) == ERROR_SUCCESS) {
-            info.uuid = uuid;
+            info->uuid = uuid;
         }
         RegCloseKey(hKey);
     }
@@ -197,11 +190,11 @@ void KNDeviceInfoFetch(KNDeviceInfo &info) {
     char computerName[256];
     DWORD computerNameSize = sizeof(computerName);
     if (GetComputerNameExA(ComputerNameDnsHostname, computerName, &computerNameSize)) {
-        info.name = computerName;
+        info->name = strdup(computerName);
     }
 
     // model
-    info.model = GetComputerModel();
+    info->model = GetComputerModel();
 }
 
 #endif

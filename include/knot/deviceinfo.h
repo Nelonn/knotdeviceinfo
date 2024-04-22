@@ -1,24 +1,32 @@
 /*
- * This file is part of libknotdeviceinfo.
+ * This file is part of knotdeviceinfo.
  *
  * For license and copyright information please follow this link:
- * https://github.com/noseam-env/libknotdeviceinfo/blob/master/LEGAL
+ * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
 
-#ifndef KNOT_DEVICEINFO_H
-#define KNOT_DEVICEINFO_H
+#ifndef KNOTDEVICEINFO_H
+#define KNOTDEVICEINFO_H
 
-#include <optional>
-#include <string>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-struct KNDeviceInfo {
-    std::optional<std::string> uuid;
-    std::optional<std::string> name;
-    std::optional<std::string> model;
-    std::optional<std::string> platform;
-    std::optional<std::string> system_version;
-};
+// All fields are nullable
+typedef struct KNDeviceInfo {
+    char* uuid;
+    char* name;
+    char* model;
+    char* platform;
+    char* system_version;
+} KNDeviceInfo;
 
-void KNDeviceInfoFetch(KNDeviceInfo &info);
+void KNDeviceInfoFetch(KNDeviceInfo* dest);
 
-#endif //KNOT_DEVICEINFO_H
+void KNDeviceInfoFree(KNDeviceInfo*);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //KNOTDEVICEINFO_H
