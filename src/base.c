@@ -14,5 +14,6 @@ void KNDeviceInfoFree(KNDeviceInfo* info) {
   free(info->name);
   free(info->model);
   free(info->platform);
+  free(info->system_name);
   free(info->system_version);
 }

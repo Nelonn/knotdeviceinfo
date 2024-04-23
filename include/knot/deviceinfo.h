@@ -17,7 +17,8 @@ typedef struct KNDeviceInfo {
     char* uuid;
     char* name;
     char* model;
-    char* platform;
+    char* platform; // Linux, macOS, Windows
+    char* system_name; // Debian GNU/Linux, macOS, Windows
     char* system_version;
 } KNDeviceInfo;
 

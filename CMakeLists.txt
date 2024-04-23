@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.5)
 
-set(project_langs C CXX)
+set(project_langs C)
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(project_langs C OBJC OBJCXX)
 endif ()
@@ -31,14 +31,18 @@ elseif (OS_MACOS)
     find_library(FOUNDATION_LIBRARY Foundation)
     list(APPEND KNOTDEVICEINFO_LIBS ${IOKIT_LIBRARY} ${FOUNDATION_LIBRARY})
 elseif (OS_WINDOWS)
-    set(KNOTDEVICEINFO_SOURCES src/windows.cpp)
+    set(KNOTDEVICEINFO_SOURCES src/windows.c)
     list(APPEND KNOTDEVICEINFO_LIBS wbemuuid)
 else ()
     message(FATAL_ERROR "Unknown or unsupported OS: ${CMAKE_SYSTEM_NAME}")
 endif ()
 
-add_library(knotdeviceinfo_static STATIC src/free.c src/os.h ${KNOTDEVICEINFO_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/include/knot/deviceinfo.h")
+add_library(knotdeviceinfo_static STATIC src/base.c src/os.h ${KNOTDEVICEINFO_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/include/knot/deviceinfo.h")
 
 target_include_directories(knotdeviceinfo_static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 target_link_libraries(knotdeviceinfo_static PRIVATE ${KNOTDEVICEINFO_LIBS})
+
+if (PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(example)
+endif ()

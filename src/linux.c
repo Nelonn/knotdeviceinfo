@@ -36,6 +36,8 @@ BUG_REPORT_URL="https://bugs.debian.org/"
 */
 
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
+    info->platform = strdup("Linux");
+
     FILE *infile = fopen("/etc/os-release", "r");
     if (infile == NULL) {
       return;
@@ -69,7 +71,7 @@ void KNDeviceInfoFetch(KNDeviceInfo* info) {
             }
 
             if (strcmp(key, "NAME") == 0) {
-                info->platform = strdup(value);
+                info->system_name = strdup(value);
             } else if (strcmp(key, "VERSION_ID") == 0) {
                 info->system_version = strdup(value);
             }
