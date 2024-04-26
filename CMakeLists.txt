@@ -5,12 +5,11 @@
 
 cmake_minimum_required(VERSION 3.5)
 
-set(project_langs C)
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(project_langs C OBJC OBJCXX)
-endif ()
+project(knotdeviceinfo LANGUAGES C)
 
-project(knotdeviceinfo LANGUAGES ${project_langs})
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    enable_language(OBJC)
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -26,7 +25,7 @@ endif()
 if (OS_LINUX AND NOT ANDROID) # GNU/Linux
     set(KNOTDEVICEINFO_SOURCES src/linux.c)
 elseif (OS_MACOS)
-    set(KNOTDEVICEINFO_SOURCES src/macos.c src/macos_obj.mm)
+    set(KNOTDEVICEINFO_SOURCES src/macos.c src/macos.m)
     find_library(IOKIT_LIBRARY IOKit)
     find_library(FOUNDATION_LIBRARY Foundation)
     list(APPEND KNOTDEVICEINFO_LIBS ${IOKIT_LIBRARY} ${FOUNDATION_LIBRARY})

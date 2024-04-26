@@ -116,11 +116,11 @@ NSString* deviceModelPretty() {
     }
 
     size_t length = 0;
-    sysctlbyname("hw.model", nullptr, &length, nullptr, 0);
+    sysctlbyname("hw.model", NULL, &length, NULL, 0);
 
     if (length > 0) {
         char* bytes = (char*)malloc(length * sizeof(char));
-        sysctlbyname("hw.model", bytes, &length, nullptr, 0);
+        sysctlbyname("hw.model", bytes, &length, NULL, 0);
         NSString* model = [NSString stringWithCString:bytes encoding:NSUTF8StringEncoding];
         free(bytes);
 
@@ -134,18 +134,18 @@ NSString* deviceModelPretty() {
     return @"";
 }
 
-extern "C" {
-const char *getCurrentHostName();
-const char *getDeviceModel();
-}
+const char* KNDeviceInfo_getCurrentHostName() {
+    NSHost* currentHost = [NSHost currentHost];
+    NSString* localizedName = [currentHost localizedName];
 
-const char *getCurrentHostName() {
-    NSHost *currentHost = [NSHost currentHost];
-    NSString *localizedName = [currentHost localizedName];
+    // Replace special apostrophe with default
+    // Michael’s Mac Pro -> Michael's Mac Pro
+    localizedName = [localizedName stringByReplacingOccurrencesOfString:@"’" withString:@"'"];
+
     return [localizedName UTF8String];
 }
 
-const char *getDeviceModel() {
-    NSString *model = deviceModelPretty();
+const char* KNDeviceInfo_getDeviceModel() {
+    NSString* model = deviceModelPretty();
     return [model UTF8String];
 }
