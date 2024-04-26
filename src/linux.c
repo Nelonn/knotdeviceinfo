@@ -5,7 +5,7 @@
  * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
 
-#include "os.h"
+#include "target.h"
 
 #if defined(OS_LINUX)
 

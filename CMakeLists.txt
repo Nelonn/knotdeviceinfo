@@ -36,7 +36,7 @@ else ()
     message(FATAL_ERROR "Unknown or unsupported OS: ${CMAKE_SYSTEM_NAME}")
 endif ()
 
-add_library(knotdeviceinfo_static STATIC src/base.c src/os.h ${KNOTDEVICEINFO_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/include/knot/deviceinfo.h")
+add_library(knotdeviceinfo_static STATIC src/base.c src/target.h ${KNOTDEVICEINFO_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/include/knot/deviceinfo.h")
 
 target_include_directories(knotdeviceinfo_static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 

@@ -5,6 +5,10 @@
  * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
 
+#include "target.h"
+
+#if defined(OS_MAC)
+
 #import <Foundation/Foundation.h>
 #import <sys/sysctl.h>
 
@@ -116,11 +120,11 @@ NSString* deviceModelPretty() {
     }
 
     size_t length = 0;
-    sysctlbyname("hw.model", NULL, &length, NULL, 0);
+    sysctlbyname("hw.model", nil, &length, nil, 0);
 
     if (length > 0) {
         char* bytes = (char*)malloc(length * sizeof(char));
-        sysctlbyname("hw.model", bytes, &length, NULL, 0);
+        sysctlbyname("hw.model", bytes, &length, nil, 0);
         NSString* model = [NSString stringWithCString:bytes encoding:NSUTF8StringEncoding];
         free(bytes);
 
@@ -149,3 +153,5 @@ const char* KNDeviceInfo_getDeviceModel() {
     NSString* model = deviceModelPretty();
     return [model UTF8String];
 }
+
+#endif // OS_MAC

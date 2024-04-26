@@ -5,7 +5,8 @@
  * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(APPLE)
+#  define OS_APPLE
 #  include <TargetConditionals.h>
 #  if TARGET_OS_IPHONE
 #    define OS_IOS 1
@@ -21,5 +22,5 @@
 #  define OS_WIN 1
 #  define OS WIN
 #else
-#  error Unsupported OS
+#  error UNKNOWN TARGET OS
 #endif
