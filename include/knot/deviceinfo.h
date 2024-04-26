@@ -14,7 +14,7 @@ extern "C" {
 
 // All fields are nullable
 typedef struct KNDeviceInfo {
-    char* uuid;
+    char* uuid; // 036880f7-e66c-4d39-8294-a348a2034cf9
     char* name;
     char* model;
     char* platform; // Linux, macOS, Windows

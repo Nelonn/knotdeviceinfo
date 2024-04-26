@@ -14,8 +14,8 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <ctype.h>
 
-char* KNDeviceInfo_getCurrentHostName();
-char* KNDeviceInfo_getDeviceModel();
+const char* KNDeviceInfo_getCurrentHostName();
+const char* KNDeviceInfo_getDeviceModel();
 
 char* KNDeviceInfo_getUUID() {
     io_service_t platformExpert = IOServiceGetMatchingService(
@@ -92,8 +92,8 @@ char* KNDeviceInfo_getVersion() {
 
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
     info->uuid = KNDeviceInfo_getUUID();
-    info->name = KNDeviceInfo_getCurrentHostName();
-    info->model = KNDeviceInfo_getDeviceModel();
+    info->name = strdup(KNDeviceInfo_getCurrentHostName());
+    info->model = strdup(KNDeviceInfo_getDeviceModel());
     info->platform = strdup("macOS");
     info->system_name = strdup("macOS");
     info->system_version = KNDeviceInfo_getVersion();
