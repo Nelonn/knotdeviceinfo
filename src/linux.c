@@ -89,6 +89,21 @@ void KNDeviceInfoFetch(KNDeviceInfo* info) {
         fclose(infile);
     }
 
+    infile = fopen("/sys/class/dmi/id/product_name", "r");
+    if (infile) {
+        char buffer[MAX_LINE_LENGTH];
+        if (fgets(buffer, sizeof(buffer), infile)) {
+            size_t len = strlen(buffer);
+            if (len && buffer[len - 1] == '\n') {
+               buffer[len - 1] = '\0';
+            }
+            if (strcmp(buffer, "To Be Filled By O.E.M.") != 0) {
+                info->model_raw = strdup(buffer);
+            }
+        }
+        fclose(infile);
+    }
+
     char hostname[MAX_LINE_LENGTH];
     if (gethostname(hostname, sizeof(hostname)) == 0) {
         info->name = strdup(hostname);

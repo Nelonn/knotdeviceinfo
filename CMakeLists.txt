@@ -3,7 +3,7 @@
 # For license and copyright information please follow this link:
 # https://github.com/noseam-env/libknotdeviceinfo/blob/master/LEGAL
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 project(knotdeviceinfo LANGUAGES C)
 
