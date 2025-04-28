@@ -91,6 +91,7 @@ char* KNDeviceInfo_getVersion() {
 }
 
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
+    memset(info, 0, sizeof(KNDeviceInfo));
     info->uuid = KNDeviceInfo_getUUID();
     info->name = strdup(KNDeviceInfo_getCurrentHostName());
     info->model = strdup(KNDeviceInfo_getDeviceModel());

@@ -179,6 +179,8 @@ char* GetComputerModel() {
 }
 
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
+    memset(info, 0, sizeof(KNDeviceInfo));
+
     info->platform = _strdup("Windows");
     info->system_name = _strdup("Windows");
     info->system_version = GetWindowsVersion();

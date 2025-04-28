@@ -4,6 +4,7 @@
  * For license and copyright information please follow this link:
  * https://github.com/noseam-env/knotdeviceinfo/blob/master/LEGAL
  */
+#pragma once
 
 #if defined(__APPLE__) || defined(APPLE)
 #  define OS_APPLE

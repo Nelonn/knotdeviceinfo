@@ -17,6 +17,12 @@ int main(void) {
     if (deviceInfo.platform) {
         printf("- Platform: %s\n", deviceInfo.platform);
     }
+    if (deviceInfo.kernel_version) {
+        printf("- Kernel Version: %s\n", deviceInfo.kernel_version);
+    }
+    if (deviceInfo.kernel_build) {
+        printf("- Kernel Build: %s\n", deviceInfo.kernel_build);
+    }
     if (deviceInfo.system_name) {
         printf("- System Name: %s\n", deviceInfo.system_name);
     }

@@ -18,6 +18,8 @@ typedef struct KNDeviceInfo {
     char* name;
     char* model;
     char* platform; // Linux, macOS, Windows
+    char* kernel_version; // Available only on Linux (uname -r)
+    char* kernel_build; // Available only on Linux (uname -v)
     char* system_name; // Debian GNU/Linux, macOS, Windows
     char* system_version;
 } KNDeviceInfo;

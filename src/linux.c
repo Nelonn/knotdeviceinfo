@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/utsname.h>
 
 #define MAX_LINE_LENGTH 256
 #define MAX_KEY_LENGTH 64
@@ -36,32 +37,41 @@ BUG_REPORT_URL="https://bugs.debian.org/"
 */
 
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
+    memset(info, 0, sizeof(KNDeviceInfo));
+
     info->platform = strdup("Linux");
 
-    FILE *infile = fopen("/etc/os-release", "r");
-    if (infile == NULL) {
-      return;
+    struct utsname uts = {0};
+    if (uname(&uts) == 0) {
+        if (strlen(uts.release) > 0) { // 6.14.2-arch1-1
+            info->kernel_version = strdup(uts.release);
+        }
+        if (strlen(uts.version) > 0) { // #1 SMP PREEMPT_DYNAMIC Thu, 10 Apr 2025 18:43:59 +0000
+            info->kernel_build = strdup(uts.version);
+        }
     }
 
-    char line[MAX_LINE_LENGTH];
-    char key[MAX_KEY_LENGTH];
-    char value[MAX_VALUE_LENGTH];
+    FILE* infile = fopen("/etc/os-release", "r");
+    if (infile) {
+        char line[MAX_LINE_LENGTH];
+        char key[MAX_KEY_LENGTH];
+        char value[MAX_VALUE_LENGTH];
 
-    while (fgets(line, sizeof(line), infile) != NULL) {
-        char *delimiter_pos = strchr(line, '=');
-        if (delimiter_pos != NULL) {
+        while (fgets(line, sizeof(line), infile) != NULL) {
+            char* delimiter_pos = strchr(line, '=');
+            if (!delimiter_pos) continue;
             *delimiter_pos = '\0';
-            strcpy(key, line);
-            strcpy(value, delimiter_pos + 1);
+            strncpy(key, line, sizeof(key)-1);
+            strncpy(value, delimiter_pos + 1, sizeof(value)-1);
 
             // Remove newline character from value
-            char *newline_pos = strchr(value, '\n');
+            char* newline_pos = strchr(value, '\n');
             if (newline_pos != NULL) {
                 *newline_pos = '\0';
             }
 
             // Remove double quotes from value
-            char *quote_pos = strchr(value, '"');
+            char* quote_pos = strchr(value, '"');
             if (quote_pos != NULL) {
                 memmove(quote_pos, quote_pos + 1, strlen(quote_pos));
                 quote_pos = strchr(value, '"');
@@ -76,8 +86,8 @@ void KNDeviceInfoFetch(KNDeviceInfo* info) {
                 info->system_version = strdup(value);
             }
         }
+        fclose(infile);
     }
-    fclose(infile);
 
     char hostname[MAX_LINE_LENGTH];
     if (gethostname(hostname, sizeof(hostname)) == 0) {
