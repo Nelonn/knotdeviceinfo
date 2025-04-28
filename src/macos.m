@@ -12,7 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <sys/sysctl.h>
 
-NSString* deviceFromSystemProfiler() {
+NSString* KNDeviceInfo_deviceFromSystemProfiler() {
     // Starting with MacBook M2 the hw.model returns simply Mac[digits],[digits].
     // So we try reading "system_profiler" output.
     NSTask* process = [[NSTask alloc] init];
@@ -70,7 +70,7 @@ NSString* deviceFromSystemProfiler() {
     }
 }
 
-NSString* fromIdentifier(NSString* model) {
+NSString* KNDeviceInfo_fromIdentifier(NSString* model) {
     if (model == nil || [model isEqualToString:@""] || ![model.lowercaseString containsString:@"mac"]) {
         return nil;
     }
@@ -112,8 +112,8 @@ NSString* fromIdentifier(NSString* model) {
     return result;
 }
 
-NSString* deviceModelPretty() {
-    NSString* fromSystemProfiler = deviceFromSystemProfiler();
+NSString* KNDeviceInfo_deviceModelPretty() {
+    NSString* fromSystemProfiler = KNDeviceInfo_deviceFromSystemProfiler();
 
     if (fromSystemProfiler != nil && ![fromSystemProfiler isEqualToString:@""]) {
         return fromSystemProfiler;
@@ -123,12 +123,12 @@ NSString* deviceModelPretty() {
     sysctlbyname("hw.model", nil, &length, nil, 0);
 
     if (length > 0) {
-        char* bytes = (char*)malloc(length * sizeof(char));
+        char* bytes = malloc(length);
         sysctlbyname("hw.model", bytes, &length, nil, 0);
         NSString* model = [NSString stringWithCString:bytes encoding:NSUTF8StringEncoding];
         free(bytes);
 
-        NSString* parsed = fromIdentifier(model);
+        NSString* parsed = KNDeviceInfo_fromIdentifier(model);
 
         if (parsed != nil && ![parsed isEqualToString:@""]) {
             return parsed;
@@ -149,8 +149,8 @@ const char* KNDeviceInfo_getCurrentHostName() {
     return [localizedName UTF8String];
 }
 
-const char* KNDeviceInfo_getDeviceModel() {
-    NSString* model = deviceModelPretty();
+const char* KNDeviceInfo_getModelName() {
+    NSString* model = KNDeviceInfo_deviceModelPretty();
     return [model UTF8String];
 }
 

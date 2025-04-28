@@ -13,9 +13,11 @@
 #include <IOKit/IOKitLib.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <ctype.h>
+#include <sys/utsname.h>
+#include <sys/sysctl.h>
 
 const char* KNDeviceInfo_getCurrentHostName();
-const char* KNDeviceInfo_getDeviceModel();
+const char* KNDeviceInfo_getModelName();
 
 char* KNDeviceInfo_getUUID() {
     io_service_t platformExpert = IOServiceGetMatchingService(
@@ -83,18 +85,44 @@ char* KNDeviceInfo_getVersion() {
 
     char* version = (char*) malloc((len + 1) * sizeof(char));
     if (!version) {
-        return NULL; // Memory allocation failed
+        return NULL;
     }
 
     strcpy(version, buffer);
     return version;
 }
 
+char* KNDeviceInfo_getModelIdentifier() {
+  size_t len = 0;
+  if (sysctlbyname("hw.model", NULL, &len, NULL, 0) != 0 || len == 0) {
+    return NULL;
+  }
+  char* buf = malloc(len);
+  if (!buf) return NULL;
+  if (sysctlbyname("hw.model", buf, &len, NULL, 0) != 0) {
+    free(buf);
+    return NULL;
+  }
+  return buf;
+}
+
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
     memset(info, 0, sizeof(KNDeviceInfo));
+
+    struct utsname uts = {0};
+    if (uname(&uts) == 0) {
+        if (strlen(uts.release) > 0) { // 23.6.0
+            info->kernel_version = strdup(uts.release);
+        }
+        if (strlen(uts.version) > 0) { // Darwin Kernel Version 23.6.0: Thu Sep 12 23:34:49 PDT 2024; root:xnu-10063.141.1.701.1~1/RELEASE_X86_64
+            info->kernel_build = strdup(uts.version);
+        }
+    }
+
     info->uuid = KNDeviceInfo_getUUID();
     info->name = strdup(KNDeviceInfo_getCurrentHostName());
-    info->model = strdup(KNDeviceInfo_getDeviceModel());
+    info->model_raw = KNDeviceInfo_getModelIdentifier();
+    info->model_pretty = strdup(KNDeviceInfo_getModelName());
     info->platform = strdup("macOS");
     info->system_name = strdup("macOS");
     info->system_version = KNDeviceInfo_getVersion();

@@ -11,8 +11,11 @@ int main(void) {
     if (deviceInfo.name) {
         printf("- Name: %s\n", deviceInfo.name);
     }
-    if (deviceInfo.model) {
-        printf("- Model: %s\n", deviceInfo.model);
+    if (deviceInfo.model_raw) {
+        printf("- Model Raw: %s\n", deviceInfo.model_raw);
+    }
+    if (deviceInfo.model_pretty) {
+        printf("- Model Pretty: %s\n", deviceInfo.model_pretty);
     }
     if (deviceInfo.platform) {
         printf("- Platform: %s\n", deviceInfo.platform);

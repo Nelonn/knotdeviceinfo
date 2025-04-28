@@ -16,10 +16,11 @@ extern "C" {
 typedef struct KNDeviceInfo {
     char* uuid; // 036880f7-e66c-4d39-8294-a348a2034cf9
     char* name;
-    char* model;
+    char* model_raw; // MacPro7,1
+    char* model_pretty; // Mac Pro
     char* platform; // Linux, macOS, Windows
-    char* kernel_version; // Available only on Linux (uname -r)
-    char* kernel_build; // Available only on Linux (uname -v)
+    char* kernel_version; // Available only on Linux and macOS (uname -r)
+    char* kernel_build; // Available only on Linuxx and macOS (uname -v)
     char* system_name; // Debian GNU/Linux, macOS, Windows
     char* system_version;
 } KNDeviceInfo;

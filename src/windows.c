@@ -205,7 +205,7 @@ void KNDeviceInfoFetch(KNDeviceInfo* info) {
     }
 
     // model
-    info->model = GetComputerModel();
+    info->model_raw = GetComputerModel();
 }
 
 #endif
