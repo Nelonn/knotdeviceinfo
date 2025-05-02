@@ -1,8 +1,8 @@
 # libknotdeviceinfo
 
-Library, that fetch device info. Supports: Linux, macOS, Windows
+Library, that fetch device info. Supports: Linux, macOS, Windows, Android
 
-For Android see [knotandroidinfo](https://github.com/noseam-env/flowdrop-android/tree/master/knotandroidinfo)
+For pretty Android device model see [knotandroidinfo](https://github.com/noseam-env/flowdrop-android/tree/master/knotandroidinfo)
 
 ## Example
 

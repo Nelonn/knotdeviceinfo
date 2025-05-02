@@ -9,7 +9,7 @@
 
 #if defined(OS_WIN)
 
-#include "knot/deviceinfo.h"
+#include <knot/deviceinfo.h>
 #include <Windows.h>
 #include <Shlwapi.h>
 #include <Wbemidl.h>

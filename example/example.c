@@ -2,35 +2,35 @@
 #include <stdio.h>
 
 int main(void) {
-    KNDeviceInfo deviceInfo;
-    KNDeviceInfoFetch(&deviceInfo);
+    KNDeviceInfo device_info;
+    KNDeviceInfoFetch(&device_info);
     printf("Device Info:\n");
-    if (deviceInfo.uuid) {
-        printf("- UUID: %s\n", deviceInfo.uuid);
+    if (device_info.uuid) {
+        printf("- UUID: %s\n", device_info.uuid);
     }
-    if (deviceInfo.name) {
-        printf("- Name: %s\n", deviceInfo.name);
+    if (device_info.name) {
+        printf("- Name: %s\n", device_info.name);
     }
-    if (deviceInfo.model_raw) {
-        printf("- Model Raw: %s\n", deviceInfo.model_raw);
+    if (device_info.model_raw) {
+        printf("- Model Raw: %s\n", device_info.model_raw);
     }
-    if (deviceInfo.model_pretty) {
-        printf("- Model Pretty: %s\n", deviceInfo.model_pretty);
+    if (device_info.model_pretty) {
+        printf("- Model Pretty: %s\n", device_info.model_pretty);
     }
-    if (deviceInfo.platform) {
-        printf("- Platform: %s\n", deviceInfo.platform);
+    if (device_info.platform) {
+        printf("- Platform: %s\n", device_info.platform);
     }
-    if (deviceInfo.kernel_version) {
-        printf("- Kernel Version: %s\n", deviceInfo.kernel_version);
+    if (device_info.kernel_version) {
+        printf("- Kernel Version: %s\n", device_info.kernel_version);
     }
-    if (deviceInfo.kernel_build) {
-        printf("- Kernel Build: %s\n", deviceInfo.kernel_build);
+    if (device_info.kernel_build) {
+        printf("- Kernel Build: %s\n", device_info.kernel_build);
     }
-    if (deviceInfo.system_name) {
-        printf("- System Name: %s\n", deviceInfo.system_name);
+    if (device_info.system_name) {
+        printf("- System Name: %s\n", device_info.system_name);
     }
-    if (deviceInfo.system_version) {
-        printf("- System Version: %s\n", deviceInfo.system_version);
+    if (device_info.system_version) {
+        printf("- System Version: %s\n", device_info.system_version);
     }
-    KNDeviceInfoFree(&deviceInfo);
+    KNDeviceInfoFree(&device_info);
 }
