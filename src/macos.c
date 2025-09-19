@@ -119,11 +119,11 @@ void KNDeviceInfoFetch(KNDeviceInfo* info) {
         }
     }
 
+    info->platform = KN_PLATFORM_MACOS;
     info->uuid = KNDeviceInfo_getUUID();
     info->name = strdup(KNDeviceInfo_getCurrentHostName());
     info->model_raw = KNDeviceInfo_getModelIdentifier();
     info->model_pretty = strdup(KNDeviceInfo_getModelName());
-    info->platform = strdup("macOS");
     info->system_name = strdup("macOS");
     info->system_version = KNDeviceInfo_getVersion();
 }

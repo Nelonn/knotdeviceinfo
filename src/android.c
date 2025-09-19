@@ -22,7 +22,7 @@ void KNDeviceInfoFetch(KNDeviceInfo* info) {
   KNDeviceInfo_sysPropRead(&info->model_raw, "ro.product.model");
   //KNDeviceInfo_sysPropRead(&info->model_pretty, "ro.product.name"); // Not always pretty at least on Samsung
 
-  info->platform = strdup("Android");
+  info->platform = KN_PLATFORM_ANDROID;
 
   struct utsname uts = {0};
   if (uname(&uts) == 0) {

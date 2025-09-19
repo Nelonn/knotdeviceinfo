@@ -5,6 +5,9 @@ int main(void) {
     KNDeviceInfo device_info;
     KNDeviceInfoFetch(&device_info);
     printf("Device Info:\n");
+    if (device_info.platform) {
+        printf("- Platform: %s\n", KNPlatformToString(device_info.platform));
+    }
     if (device_info.uuid) {
         printf("- UUID: %s\n", device_info.uuid);
     }
@@ -16,9 +19,6 @@ int main(void) {
     }
     if (device_info.model_pretty) {
         printf("- Model Pretty: %s\n", device_info.model_pretty);
-    }
-    if (device_info.platform) {
-        printf("- Platform: %s\n", device_info.platform);
     }
     if (device_info.kernel_version) {
         printf("- Kernel Version: %s\n", device_info.kernel_version);

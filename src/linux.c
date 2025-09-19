@@ -39,7 +39,7 @@ BUG_REPORT_URL="https://bugs.debian.org/"
 void KNDeviceInfoFetch(KNDeviceInfo* info) {
     memset(info, 0, sizeof(KNDeviceInfo));
 
-    info->platform = strdup("Linux");
+    info->platform = KN_PLATFORM_LINUX;
 
     struct utsname uts = {0};
     if (uname(&uts) == 0) {
