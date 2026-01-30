@@ -12,6 +12,24 @@
 extern "C" {
 #endif
 
+#if defined(_WIN32)
+#define KNOTDEVICEINFO_DLL_EXPORT __declspec(dllexport)
+#define KNOTDEVICEINFO_DLL_IMPORT __declspec(dllimport)
+#else
+#define KNOTDEVICEINFO_DLL_EXPORT __attribute__((visibility("default")))
+#define KNOTDEVICEINFO_DLL_IMPORT __attribute__((visibility("default")))
+#endif
+
+#if defined(KNOTDEVICEINFO_DYNAMIC_IMPORT)
+#if defined(KNOTDEVICEINFO_DYNAMIC)
+#define KNOTDEVICEINFO_EXPORT KNOTDEVICEINFO_DLL_EXPORT
+#else
+#define KNOTDEVICEINFO_EXPORT KNOTDEVICEINFO_DLL_IMPORT
+#endif
+#else
+#define KNOTDEVICEINFO_EXPORT
+#endif
+
 typedef enum {
     KN_PLATFORM_UNKNOWN = 0,
     KN_PLATFORM_EMBEDDED,
@@ -55,10 +73,13 @@ typedef struct KNDeviceInfo {
     char* system_version; // 14.7.1 (on macOS), 10 (on Windows)
 } KNDeviceInfo;
 
+KNOTDEVICEINFO_EXPORT
 const char* KNPlatformToString(KNPlatform platform);
 
+KNOTDEVICEINFO_EXPORT
 void KNDeviceInfoFetch(KNDeviceInfo* dest);
 
+KNOTDEVICEINFO_EXPORT
 void KNDeviceInfoFree(KNDeviceInfo*);
 
 #ifdef __cplusplus

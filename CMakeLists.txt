@@ -42,6 +42,18 @@ endif ()
 
 add_library(knotdeviceinfo ${KNOTDEVICEINFO_SOURCES})
 
+get_target_property(KNOTDEVICEINFO_LIB_TYPE knotdeviceinfo TYPE)
+if (KNOTDEVICEINFO_LIB_TYPE STREQUAL "SHARED_LIBRARY")
+    #set_target_properties(knotdeviceinfo PROPERTIES
+    #        C_VISIBILITY_PRESET hidden
+    #        CXX_VISIBILITY_PRESET hidden
+    #        VISIBILITY_INLINES_HIDDEN ON
+    #)
+
+    target_compile_definitions(knotdeviceinfo PRIVATE KNOTDEVICEINFO_DYNAMIC)
+    target_compile_definitions(knotdeviceinfo PUBLIC KNOTDEVICEINFO_DYNAMIC_IMPORT)
+endif ()
+
 target_include_directories(knotdeviceinfo PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 target_link_libraries(knotdeviceinfo PRIVATE ${KNOTDEVICEINFO_LIBS})
