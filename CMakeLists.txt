@@ -1,11 +1,6 @@
-# This file is part of libknotdeviceinfo.
-#
-# For license and copyright information please follow this link:
-# https://github.com/noseam-env/libknotdeviceinfo/blob/master/LEGAL
+cmake_minimum_required(VERSION 3.14)
 
-cmake_minimum_required(VERSION 3.10)
-
-project(knotdeviceinfo LANGUAGES C)
+project(knotdeviceinfo VERSION 0.1.0 LANGUAGES C)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     enable_language(OBJC)
@@ -22,7 +17,7 @@ endif()
 
 set(KNOTDEVICEINFO_SOURCES src/base.c src/target.h include/knot/deviceinfo.h)
 
-if (OS_LINUX AND NOT ANDROID) # GNU/Linux
+if (OS_LINUX AND NOT ANDROID)
     list(APPEND KNOTDEVICEINFO_SOURCES src/linux.c)
 elseif (OS_DARWIN)
     find_library(IOKIT_LIBRARY IOKit)
@@ -41,23 +36,59 @@ else ()
 endif ()
 
 add_library(knotdeviceinfo ${KNOTDEVICEINFO_SOURCES})
+add_library(knotdeviceinfo::knotdeviceinfo ALIAS knotdeviceinfo)
 
 get_target_property(KNOTDEVICEINFO_LIB_TYPE knotdeviceinfo TYPE)
 if (KNOTDEVICEINFO_LIB_TYPE STREQUAL "SHARED_LIBRARY")
-    #set_target_properties(knotdeviceinfo PROPERTIES
-    #        C_VISIBILITY_PRESET hidden
-    #        CXX_VISIBILITY_PRESET hidden
-    #        VISIBILITY_INLINES_HIDDEN ON
-    #)
-
     target_compile_definitions(knotdeviceinfo PRIVATE KNOTDEVICEINFO_DYNAMIC)
     target_compile_definitions(knotdeviceinfo PUBLIC KNOTDEVICEINFO_DYNAMIC_IMPORT)
 endif ()
 
-target_include_directories(knotdeviceinfo PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(knotdeviceinfo PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 target_link_libraries(knotdeviceinfo PRIVATE ${KNOTDEVICEINFO_LIBS})
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+install(TARGETS knotdeviceinfo
+    EXPORT knotdeviceinfoTargets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT knotdeviceinfoTargets
+    FILE knotdeviceinfoTargets.cmake
+    NAMESPACE knotdeviceinfo::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/knotdeviceinfo
+)
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/knotdeviceinfoConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/knotdeviceinfoConfig.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/knotdeviceinfo"
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/knotdeviceinfoConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/knotdeviceinfoConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/knotdeviceinfoConfigVersion.cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/knotdeviceinfo"
+)
 
 if (PROJECT_IS_TOP_LEVEL)
     add_subdirectory(example)
 endif ()
+

@@ -1,2 +1,2 @@
 add_executable(device_example example.c)
-target_link_libraries(device_example knotdeviceinfo)
+target_link_libraries(device_example knotdeviceinfo::knotdeviceinfo)
